@@ -2,11 +2,12 @@ package app
 
 import (
 	"github.com/prabhatrastogik/tradesmart-go/internal/config"
+	"github.com/prabhatrastogik/tradesmart-go/internal/utils"
 	kiteconnect "github.com/zerodha/gokiteconnect/v4"
 )
 
 var (
-	logger = config.GetLogger("instruments")
+	logger = utils.GetLogger("instruments")
 )
 
 // Function that use Zerodha kite to get all instruments

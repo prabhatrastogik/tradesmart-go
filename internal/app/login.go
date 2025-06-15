@@ -68,7 +68,7 @@ func totpVerify(client *http.Client, creds config.Credentials, requestID string)
 	}()
 
 	if totpResp.StatusCode != http.StatusOK {
-		return errors.New("failed to verify TOTP")
+		return errors.New("failed to verify TOTP, status code: " + fmt.Sprintf("%d", totpResp.StatusCode))
 	}
 	return nil
 }

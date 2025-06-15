@@ -1,11 +1,18 @@
 package main
 
 import (
-	"fmt"
+	// "fmt"
 
 	"github.com/prabhatrastogik/tradesmart-go/internal/app"
+	"github.com/prabhatrastogik/tradesmart-go/internal/config"
+	"github.com/prabhatrastogik/tradesmart-go/internal/utils"
 )
 
 func main() {
-	fmt.Println(app.GetAllInstruments())
+	instruments := app.GetAllInstruments()
+	db, err := config.GetDuckDBConnection()
+	if err != nil {
+		utils.GetLogger("main").Fatalf("Failed to connect to DuckDB: %v", err)
+	}
+	utils.WriteStructsToDuckDB(db, "instruments", "instruments", instruments)
 }
