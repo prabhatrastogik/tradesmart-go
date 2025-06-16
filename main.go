@@ -14,5 +14,8 @@ func main() {
 	if err != nil {
 		utils.GetLogger("main").Fatalf("Failed to connect to DuckDB: %v", err)
 	}
-	utils.WriteStructsToDuckDB(db, "instruments", "instruments", instruments)
+	err = utils.WriteStructsToDuckDB(db, "instruments", "instruments", instruments)
+	if err != nil {
+		utils.GetLogger("main").Fatalf("Failed to write to DuckDB: %v", err)
+	}
 }

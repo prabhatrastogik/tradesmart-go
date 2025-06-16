@@ -9,9 +9,10 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
-	"time"
+	// "time"
 
 	duckdb "github.com/marcboeker/go-duckdb"
+	"github.com/zerodha/gokiteconnect/v4/models"
 )
 
 func WriteStructsToCSV[T any](filename string, data []T) error {
@@ -115,9 +116,14 @@ func WriteStructsToDuckDB[T any](con *duckdb.Conn, schema, table string, data []
 
 	for i := range v.Len() {
 		row := v.Index(i)
+		var val any
 		var values []driver.Value
 		for j := range row.NumField() {
-			val := row.Field(j).Interface()
+			if row.Field(j).Type() == reflect.TypeOf(models.Time{}) {
+				val = row.Field(j).Field(0).Interface()
+			} else {
+				val = row.Field(j).Interface()
+			}
 			values = append(values, val)
 		}
 		if err := appender.AppendRow(values...); err != nil {
@@ -141,9 +147,9 @@ func mapGoTypeToDuckDBType(t reflect.Type) string {
 	case reflect.Bool:
 		return "BOOLEAN"
 	case reflect.Struct:
-		if t == reflect.TypeOf(time.Time{}) {
+		if t == reflect.TypeOf(models.Time{}) {
 			return "TIMESTAMP"
 		}
 	}
-	return "TIMESTAMP"
+	return ""
 }
